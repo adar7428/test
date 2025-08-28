@@ -1,4 +1,3 @@
-// 企業級抽獎系統 JavaScript
 class LotterySystem {
     constructor() {
         this.codes = JSON.parse(localStorage.getItem('lotteryCodes')) || [];

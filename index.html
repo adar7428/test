@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>幸運轉盤抽獎系統</title>
+    <title>企業級抽獎系統 - 代碼驗證版</title>
     <style>
         * {
             margin: 0;
@@ -83,7 +83,91 @@
             display: block;
         }
         
-        /* 轉盤遊戲區域 */
+        /* 代碼驗證區域 */
+        .code-verification {
+            background: rgba(255,255,255,0.9);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #333;
+        }
+        
+        .code-input-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        #codeInput {
+            padding: 15px 20px;
+            font-size: 18px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            min-width: 200px;
+        }
+        
+        #codeInput:focus {
+            border-color: #4ecdc4;
+            outline: none;
+            box-shadow: 0 0 10px rgba(78, 205, 196, 0.3);
+        }
+        
+        .verify-btn {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .verify-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(68, 160, 141, 0.4);
+        }
+        
+        .status-message {
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .status-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .ip-info {
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
+        }
+        
+        /* 遊戲區域 */
         .game-area {
             display: flex;
             gap: 30px;
@@ -157,24 +241,7 @@
             color: #333;
         }
         
-        .result-display {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        
-        .result-display h3 {
-            color: #ff4757;
-            margin-bottom: 10px;
-        }
-        
-        #currentResult {
-            font-size: 24px;
-            font-weight: bold;
-            color: #2ed573;
-            margin-bottom: 10px;
-        }
-        
-        /* 後台管理區域 */
+        /* 後台管理樣式 */
         .admin-section {
             background: rgba(255,255,255,0.9);
             border-radius: 15px;
@@ -183,75 +250,90 @@
             color: #333;
         }
         
-        .prize-item {
+        .code-management {
+            margin-bottom: 30px;
+        }
+        
+        .code-generator {
             display: flex;
+            gap: 15px;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            border: 2px solid transparent;
-            transition: all 0.3s;
+            margin: 20px 0;
         }
         
-        .prize-item:hover {
-            border-color: #ff4757;
-            transform: scale(1.02);
-        }
-        
-        .prize-item input[type="text"] {
-            flex: 1;
-            padding: 8px 12px;
+        .code-generator input {
+            padding: 10px;
             border: 1px solid #ddd;
             border-radius: 5px;
+            flex: 1;
+        }
+        
+        .generate-btn, .bulk-generate-btn {
+            background: #2ed573;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
             font-size: 14px;
         }
         
-        .prize-item input[type="number"] {
-            width: 80px;
-            padding: 8px 12px;
+        .code-list {
+            max-height: 300px;
+            overflow-y: auto;
             border: 1px solid #ddd;
-            border-radius: 5px;
-            text-align: center;
+            border-radius: 10px;
+            padding: 15px;
+            background: #f8f9fa;
         }
         
-        .color-picker {
-            width: 50px;
-            height: 40px;
-            border: none;
+        .code-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            margin: 5px 0;
+            background: white;
             border-radius: 5px;
-            cursor: pointer;
+            border-left: 4px solid #4ecdc4;
         }
         
-        .delete-btn {
+        .code-item.used {
+            opacity: 0.6;
+            border-left-color: #ccc;
+        }
+        
+        .delete-code-btn {
             background: #ff4757;
             color: white;
             border: none;
-            padding: 8px 12px;
-            border-radius: 5px;
+            padding: 5px 10px;
+            border-radius: 3px;
             cursor: pointer;
             font-size: 12px;
         }
         
-        .add-prize-btn, .save-btn {
-            background: #2ed573;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            margin: 10px 5px;
-            transition: all 0.3s;
+        /* IP 限制資訊 */
+        .ip-management {
+            margin-top: 30px;
         }
         
-        .add-prize-btn:hover, .save-btn:hover {
-            background: #26d0ce;
-            transform: scale(1.05);
+        .ip-list {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            background: #f8f9fa;
         }
         
-        /* 中獎動畫 */
+        .ip-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+        
+        /* 彩帶動畫 */
         .confetti {
             position: fixed;
             top: 0;
@@ -337,28 +419,12 @@
             cursor: pointer;
         }
         
-        .history {
-            max-height: 300px;
-            overflow-y: auto;
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 15px;
-        }
-        
-        .history-item {
-            padding: 8px 0;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .history-item:last-child {
-            border-bottom: none;
-        }
-        
         @media (max-width: 768px) {
             .game-area {
+                flex-direction: column;
+            }
+            
+            .code-input-group {
                 flex-direction: column;
             }
             
@@ -376,49 +442,97 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎰 幸運轉盤抽獎</h1>
-            <p style="color: white; font-size: 1.2em;">設定你的獎品，控制中獎機率，開始抽獎吧！</p>
+            <h1>🎰 企業級抽獎系統</h1>
+            <p style="color: white; font-size: 1.2em;">輸入專屬代碼，每個IP每天限抽一次！</p>
         </div>
         
         <div class="tabs">
             <button class="tab-btn active" onclick="switchTab('game')">🎮 抽獎遊戲</button>
-            <button class="tab-btn" onclick="switchTab('admin')">⚙️ 後台管理</button>
-            <button class="tab-btn" onclick="switchTab('history')">📊 中獎記錄</button>
+            <button class="tab-btn" onclick="switchTab('codes')">🔑 代碼管理</button>
+            <button class="tab-btn" onclick="switchTab('admin')">⚙️ 獎品設定</button>
+            <button class="tab-btn" onclick="switchTab('history')">📊 記錄查詢</button>
         </div>
         
         <!-- 遊戲主界面 -->
         <div id="game" class="tab-content active">
-            <div class="game-area">
-                <div class="wheel-container">
-                    <div class="wheel-wrapper">
-                        <div class="pointer"></div>
-                        <canvas id="wheel" width="400" height="400"></canvas>
-                    </div>
-                    <button id="spinBtn" class="spin-btn" onclick="spin()">開始抽獎！</button>
+            <!-- 代碼驗證區域 -->
+            <div class="code-verification">
+                <h2>🔑 請輸入抽獎代碼</h2>
+                <div class="code-input-group">
+                    <input type="text" id="codeInput" placeholder="輸入8位代碼" maxlength="8">
+                    <button class="verify-btn" onclick="verifyCode()">驗證代碼</button>
                 </div>
-                
-                <div class="info-panel">
-                    <div class="result-display">
-                        <h3>🏆 抽獎結果</h3>
-                        <div id="currentResult">點擊開始抽獎</div>
-                        <div id="resultDescription"></div>
+                <div id="statusMessage" class="status-message" style="display: none;"></div>
+                <div id="ipInfo" class="ip-info"></div>
+            </div>
+            
+            <!-- 抽獎遊戲區域（初始隱藏） -->
+            <div id="gameSection" style="display: none;">
+                <div class="game-area">
+                    <div class="wheel-container">
+                        <div class="wheel-wrapper">
+                            <div class="pointer"></div>
+                            <canvas id="wheel" width="400" height="400"></canvas>
+                        </div>
+                        <button id="spinBtn" class="spin-btn" onclick="spin()">開始抽獎！</button>
                     </div>
                     
-                    <div class="statistics">
-                        <h4>📈 統計資訊</h4>
-                        <p>總抽獎次數: <span id="totalSpins">0</span></p>
-                        <p>今日幸運兒: <span id="todayWinners">0</span></p>
-                    </div>
-                    
-                    <div class="current-prizes">
-                        <h4>🎁 當前獎品清單</h4>
-                        <div id="prizesList"></div>
+                    <div class="info-panel">
+                        <div class="result-display">
+                            <h3>🏆 抽獎結果</h3>
+                            <div id="currentResult">點擊開始抽獎</div>
+                            <div id="resultDescription"></div>
+                        </div>
+                        
+                        <div class="user-info">
+                            <h4>👤 用戶資訊</h4>
+                            <p>使用代碼: <span id="currentCode">--</span></p>
+                            <p>您的IP: <span id="userIP">--</span></p>
+                            <p>今日狀態: <span id="todayStatus">--</span></p>
+                        </div>
+                        
+                        <div class="current-prizes">
+                            <h4>🎁 當前獎品清單</h4>
+                            <div id="prizesList"></div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- 後台管理界面 -->
+        <!-- 代碼管理界面 -->
+        <div id="codes" class="tab-content">
+            <div class="admin-section">
+                <h2>🔑 抽獎代碼管理</h2>
+                
+                <div class="code-management">
+                    <h3>生成新代碼</h3>
+                    <div class="code-generator">
+                        <input type="number" id="codeCount" placeholder="生成數量" value="10" min="1" max="100">
+                        <button class="generate-btn" onclick="generateCodes()">生成代碼</button>
+                        <button class="bulk-generate-btn" onclick="generateBulkCodes()">批量生成50個</button>
+                    </div>
+                    
+                    <h3>代碼列表 (總計: <span id="codeTotal">0</span> 個，已使用: <span id="usedTotal">0</span> 個)</h3>
+                    <div id="codeListContainer" class="code-list"></div>
+                    
+                    <div style="margin-top: 20px;">
+                        <button onclick="exportCodes()" style="background: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-right: 10px;">匯出代碼</button>
+                        <button onclick="clearAllCodes()" style="background: #e74c3c; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">清空所有代碼</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="admin-section">
+                <div class="ip-management">
+                    <h3>📍 IP 使用記錄</h3>
+                    <div id="ipListContainer" class="ip-list"></div>
+                    <button onclick="clearIPRecords()" style="background: #e74c3c; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; margin-top: 10px;">清空IP記錄</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 獎品設定界面 -->
         <div id="admin" class="tab-content">
             <div class="admin-section">
                 <h2>🔧 獎品管理</h2>
@@ -441,7 +555,7 @@
             </div>
         </div>
         
-        <!-- 中獎記錄界面 -->
+        <!-- 記錄查詢界面 -->
         <div id="history" class="tab-content">
             <div class="admin-section">
                 <h2>📊 中獎記錄</h2>
@@ -459,7 +573,8 @@
         <div class="winner-content">
             <div class="winner-title">🎉 恭喜中獎！</div>
             <div id="winnerPrize" class="winner-prize"></div>
-            <button class="close-modal-btn" onclick="closeWinnerModal()">繼續抽獎</button>
+            <div>使用代碼: <span id="winnerCode"></span></div>
+            <button class="close-modal-btn" onclick="closeWinnerModal()">確認領獎</button>
         </div>
     </div>
     
@@ -469,10 +584,12 @@
     <script>
         // 全局變量
         let prizes = [];
+        let validCodes = [];
+        let ipRecords = {};
+        let history = [];
+        let currentVerifiedCode = null;
+        let userIP = null;
         let spinning = false;
-        let totalSpins = parseInt(localStorage.getItem('totalSpins') || '0');
-        let todayWinners = parseInt(localStorage.getItem('todayWinners') || '0');
-        let history = JSON.parse(localStorage.getItem('lotteryHistory') || '[]');
         
         // 預設獎品
         const defaultPrizes = [
@@ -486,11 +603,133 @@
         
         // 初始化
         document.addEventListener('DOMContentLoaded', function() {
+            initializeSystem();
             loadPrizes();
-            updateStatistics();
-            updatePrizesList();
+            generateUserIP();
+            displayIPInfo();
+            updateCodeList();
+            updateIPList();
             renderHistory();
         });
+        
+        // 初始化系統
+        function initializeSystem() {
+            // 載入保存的資料
+            validCodes = JSON.parse(localStorage.getItem('lotteryValidCodes') || '[]');
+            ipRecords = JSON.parse(localStorage.getItem('lotteryIPRecords') || '{}');
+            history = JSON.parse(localStorage.getItem('lotteryHistoryEnterprise') || '[]');
+            
+            // 如果沒有代碼，生成一些測試代碼
+            if (validCodes.length === 0) {
+                generateTestCodes();
+            }
+        }
+        
+        // 生成測試代碼
+        function generateTestCodes() {
+            const testCodes = ['WELCOME1', 'DEMO2024', 'TEST0001', 'LUCKY888', 'GIFT2024'];
+            testCodes.forEach(code => {
+                validCodes.push({
+                    code: code,
+                    isUsed: false,
+                    usedBy: null,
+                    usedAt: null,
+                    createdAt: new Date().toISOString()
+                });
+            });
+            saveValidCodes();
+            showStatus('已生成測試代碼：' + testCodes.join(', '), 'success');
+        }
+        
+        // 模擬獲取用戶IP
+        function generateUserIP() {
+            // 在真實環境中，這應該從伺服器獲取
+            let savedIP = localStorage.getItem('simulatedUserIP');
+            if (!savedIP) {
+                savedIP = '192.168.1.' + (Math.floor(Math.random() * 200) + 10);
+                localStorage.setItem('simulatedUserIP', savedIP);
+            }
+            userIP = savedIP;
+        }
+        
+        // 顯示IP資訊
+        function displayIPInfo() {
+            document.getElementById('ipInfo').innerHTML = `
+                您的IP: <strong>${userIP}</strong> | 
+                今日抽獎次數: <strong>${getTodayDrawCount(userIP)}/1</strong>
+            `;
+            document.getElementById('userIP').textContent = userIP;
+        }
+        
+        // 獲取今日抽獎次數
+        function getTodayDrawCount(ip) {
+            const today = new Date().toDateString();
+            if (ipRecords[ip] && ipRecords[ip].lastDrawDate === today) {
+                return ipRecords[ip].drawCount;
+            }
+            return 0;
+        }
+        
+        // 檢查是否可以抽獎
+        function canDrawToday(ip) {
+            return getTodayDrawCount(ip) === 0;
+        }
+        
+        // 驗證代碼
+        function verifyCode() {
+            const inputCode = document.getElementById('codeInput').value.trim().toUpperCase();
+            
+            if (!inputCode) {
+                showStatus('請輸入代碼', 'error');
+                return;
+            }
+            
+            // 檢查代碼是否存在
+            const codeObj = validCodes.find(c => c.code === inputCode);
+            if (!codeObj) {
+                showStatus('無效的代碼，請檢查後重新輸入', 'error');
+                return;
+            }
+            
+            // 檢查代碼是否已使用
+            if (codeObj.isUsed) {
+                showStatus(`此代碼已於 ${new Date(codeObj.usedAt).toLocaleString('zh-TW')} 被使用`, 'error');
+                return;
+            }
+            
+            // 檢查IP是否今日已抽獎
+            if (!canDrawToday(userIP)) {
+                showStatus('您今日已經抽過獎了，每個IP每天只能抽獎一次', 'warning');
+                return;
+            }
+            
+            // 驗證成功
+            currentVerifiedCode = inputCode;
+            showStatus('代碼驗證成功！您可以開始抽獎了', 'success');
+            document.getElementById('currentCode').textContent = inputCode;
+            document.getElementById('todayStatus').textContent = '可以抽獎';
+            document.getElementById('gameSection').style.display = 'block';
+            
+            // 隱藏驗證區域
+            document.querySelector('.code-verification').style.display = 'none';
+            
+            // 繪製轉盤
+            drawWheel();
+            updatePrizesList();
+        }
+        
+        // 顯示狀態訊息
+        function showStatus(message, type) {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.textContent = message;
+            statusEl.className = `status-message status-${type}`;
+            statusEl.style.display = 'block';
+            
+            // 3秒後自動隱藏
+            setTimeout(() => {
+                statusEl.style.display = 'none';
+            }, 3000);
+        }
         
         // 載入獎品設定
         function loadPrizes() {
@@ -498,66 +737,6 @@
             prizes = saved ? JSON.parse(saved) : [...defaultPrizes];
             renderAdminPrizes();
             drawWheel();
-        }
-        
-        // 儲存獎品設定
-        function savePrizes() {
-            const items = document.querySelectorAll('#prizesAdmin .prize-item');
-            prizes = [];
-            let totalProb = 0;
-            
-            items.forEach(item => {
-                const name = item.querySelector('input[type="text"]').value.trim();
-                const probability = parseFloat(item.querySelector('input[type="number"]').value) || 0;
-                const color = item.querySelector('.color-picker').value;
-                
-                if (name) {
-                    prizes.push({ name, probability, color });
-                    totalProb += probability;
-                }
-            });
-            
-            // 檢查機率總和
-            if (Math.abs(totalProb - 100) > 0.1) {
-                alert(`警告：機率總和為 ${totalProb.toFixed(1)}%，建議調整為 100%`);
-            }
-            
-            localStorage.setItem('lotteryPrizes', JSON.stringify(prizes));
-            drawWheel();
-            updatePrizesList();
-            alert('設定已儲存！');
-        }
-        
-        // 渲染後台獎品編輯
-        function renderAdminPrizes() {
-            const container = document.getElementById('prizesAdmin');
-            container.innerHTML = '';
-            
-            prizes.forEach((prize, index) => {
-                const div = document.createElement('div');
-                div.className = 'prize-item';
-                div.innerHTML = `
-                    <input type="text" value="${prize.name}" placeholder="獎品名稱">
-                    <input type="number" value="${prize.probability}" min="0" max="100" step="0.1" placeholder="機率%">
-                    <input type="color" class="color-picker" value="${prize.color}">
-                    <button class="delete-btn" onclick="deletePrize(${index})">刪除</button>
-                `;
-                container.appendChild(div);
-            });
-        }
-        
-        // 新增獎品
-        function addPrize() {
-            prizes.push({ name: '新獎品', probability: 0, color: '#' + Math.floor(Math.random()*16777215).toString(16) });
-            renderAdminPrizes();
-        }
-        
-        // 刪除獎品
-        function deletePrize(index) {
-            if (confirm('確定要刪除這個獎品嗎？')) {
-                prizes.splice(index, 1);
-                renderAdminPrizes();
-            }
         }
         
         // 繪製轉盤
@@ -653,7 +832,13 @@
         
         // 開始抽獎
         function spin() {
-            if (spinning || prizes.length === 0) return;
+            if (spinning || !currentVerifiedCode || prizes.length === 0) return;
+            
+            // 再次檢查限制
+            if (!canDrawToday(userIP)) {
+                alert('您今日已經抽過獎了！');
+                return;
+            }
             
             spinning = true;
             document.getElementById('spinBtn').disabled = true;
@@ -673,15 +858,13 @@
                 }
             }
             
-            // 計算目標角度 - 修正箭頭指向問題
+            // 計算目標角度
             let targetAngle = 0;
             for (let i = 0; i < selectedIndex; i++) {
                 targetAngle += (prizes[i].probability / totalProbability) * 360;
             }
-            // 指向獎品區域中央，並且考慮箭頭在頂部的位置
             targetAngle += (prizes[selectedIndex].probability / totalProbability) * 360 / 2;
             
-            // 調整角度讓箭頭正確指向中獎區域（箭頭在頂部，所以目標區域需要轉到頂部）
             const finalAngle = 360 * 5 + targetAngle;
             
             // 執行轉動動畫
@@ -690,14 +873,60 @@
             
             // 4秒後顯示結果
             setTimeout(() => {
-                showResult(selectedPrize);
+                processDrawResult(selectedPrize);
                 spinning = false;
                 document.getElementById('spinBtn').disabled = false;
-                totalSpins++;
-                todayWinners++;
-                updateStatistics();
-                saveHistory(selectedPrize);
             }, 4000);
+        }
+        
+        // 處理抽獎結果
+        function processDrawResult(prize) {
+            // 標記代碼為已使用
+            const codeObj = validCodes.find(c => c.code === currentVerifiedCode);
+            if (codeObj) {
+                codeObj.isUsed = true;
+                codeObj.usedBy = userIP;
+                codeObj.usedAt = new Date().toISOString();
+            }
+            
+            // 更新IP記錄
+            const today = new Date().toDateString();
+            if (!ipRecords[userIP] || ipRecords[userIP].lastDrawDate !== today) {
+                ipRecords[userIP] = {
+                    lastDrawDate: today,
+                    drawCount: 1,
+                    totalDraws: (ipRecords[userIP]?.totalDraws || 0) + 1
+                };
+            }
+            
+            // 儲存記錄
+            const record = {
+                code: currentVerifiedCode,
+                prize: prize.name,
+                ip: userIP,
+                time: new Date().toLocaleString('zh-TW'),
+                timestamp: Date.now()
+            };
+            history.unshift(record);
+            
+            // 只保留最近100筆記錄
+            if (history.length > 100) {
+                history = history.slice(0, 100);
+            }
+            
+            // 儲存所有資料
+            saveValidCodes();
+            saveIPRecords();
+            saveHistory();
+            
+            // 顯示結果
+            showResult(prize);
+            
+            // 更新UI
+            updateCodeList();
+            updateIPList();
+            renderHistory();
+            document.getElementById('todayStatus').textContent = '今日已抽獎';
         }
         
         // 顯示中獎結果
@@ -707,6 +936,7 @@
             
             // 顯示中獎彈窗
             document.getElementById('winnerPrize').textContent = prize.name;
+            document.getElementById('winnerCode').textContent = currentVerifiedCode;
             document.getElementById('winnerModal').style.display = 'flex';
             
             // 播放彩帶動畫
@@ -730,7 +960,6 @@
                 confettiContainer.appendChild(confettiPiece);
             }
             
-            // 3秒後清除彩帶
             setTimeout(() => {
                 confettiContainer.innerHTML = '';
             }, 3000);
@@ -739,30 +968,228 @@
         // 關閉中獎彈窗
         function closeWinnerModal() {
             document.getElementById('winnerModal').style.display = 'none';
+            // 重置界面，不允許再次抽獎
+            document.getElementById('spinBtn').style.display = 'none';
+            document.getElementById('currentResult').innerHTML += '<br><small style="color: #666;">感謝參與，明天再來試試運氣！</small>';
         }
         
-        // 切換標籤頁
-        function switchTab(tab) {
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
+        // 生成隨機代碼
+        function generateRandomCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = '';
+            for (let i = 0; i < 8; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+        
+        // 生成代碼
+        function generateCodes() {
+            const count = parseInt(document.getElementById('codeCount').value) || 10;
+            let generated = 0;
+            
+            for (let i = 0; i < count * 2 && generated < count; i++) {
+                const newCode = generateRandomCode();
+                if (!validCodes.find(c => c.code === newCode)) {
+                    validCodes.push({
+                        code: newCode,
+                        isUsed: false,
+                        usedBy: null,
+                        usedAt: null,
+                        createdAt: new Date().toISOString()
+                    });
+                    generated++;
+                }
+            }
+            
+            saveValidCodes();
+            updateCodeList();
+            alert(`成功生成 ${generated} 個代碼`);
+        }
+        
+        // 批量生成代碼
+        function generateBulkCodes() {
+            document.getElementById('codeCount').value = 50;
+            generateCodes();
+        }
+        
+        // 更新代碼列表
+        function updateCodeList() {
+            const container = document.getElementById('codeListContainer');
+            const usedCount = validCodes.filter(c => c.isUsed).length;
+            
+            document.getElementById('codeTotal').textContent = validCodes.length;
+            document.getElementById('usedTotal').textContent = usedCount;
+            
+            if (validCodes.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #666;">尚無代碼，請生成代碼</p>';
+                return;
+            }
+            
+            container.innerHTML = validCodes.map((codeObj, index) => `
+                <div class="code-item ${codeObj.isUsed ? 'used' : ''}">
+                    <div>
+                        <strong>${codeObj.code}</strong>
+                        ${codeObj.isUsed ? 
+                            `<span style="color: #666; font-size: 12px;">
+                                (已使用 - ${new Date(codeObj.usedAt).toLocaleString('zh-TW')})
+                            </span>` : 
+                            '<span style="color: #2ed573; font-size: 12px;">(可使用)</span>'
+                        }
+                    </div>
+                    <button class="delete-code-btn" onclick="deleteCode(${index})">刪除</button>
+                </div>
+            `).join('');
+        }
+        
+        // 刪除代碼
+        function deleteCode(index) {
+            if (confirm(`確定要刪除代碼 "${validCodes[index].code}" 嗎？`)) {
+                validCodes.splice(index, 1);
+                saveValidCodes();
+                updateCodeList();
+            }
+        }
+        
+        // 清空所有代碼
+        function clearAllCodes() {
+            if (confirm('確定要清空所有代碼嗎？此操作無法撤銷！')) {
+                validCodes = [];
+                saveValidCodes();
+                updateCodeList();
+                alert('已清空所有代碼');
+            }
+        }
+        
+        // 匯出代碼
+        function exportCodes() {
+            if (validCodes.length === 0) {
+                alert('沒有代碼可以匯出！');
+                return;
+            }
+            
+            const csvContent = '代碼,狀態,使用時間,使用IP\n' + 
+                validCodes.map(c => `"${c.code}","${c.isUsed ? '已使用' : '未使用'}","${c.usedAt ? new Date(c.usedAt).toLocaleString('zh-TW') : ''}","${c.usedBy || ''}"`).join('\n');
+            
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `抽獎代碼_${new Date().toLocaleDateString('zh-TW')}.csv`;
+            link.click();
+        }
+        
+        // 更新IP列表
+        function updateIPList() {
+            const container = document.getElementById('ipListContainer');
+            const ips = Object.keys(ipRecords);
+            
+            if (ips.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #666;">尚無IP記錄</p>';
+                return;
+            }
+            
+            container.innerHTML = ips.map(ip => {
+                const record = ipRecords[ip];
+                return `
+                    <div class="ip-item">
+                        <strong>${ip}</strong> - 
+                        最後抽獎: ${record.lastDrawDate} - 
+                        總計抽獎: ${record.totalDraws} 次
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // 清空IP記錄
+        function clearIPRecords() {
+            if (confirm('確定要清空所有IP記錄嗎？')) {
+                ipRecords = {};
+                saveIPRecords();
+                updateIPList();
+                alert('已清空IP記錄');
+            }
+        }
+        
+        // 儲存函數
+        function saveValidCodes() {
+            localStorage.setItem('lotteryValidCodes', JSON.stringify(validCodes));
+        }
+        
+        function saveIPRecords() {
+            localStorage.setItem('lotteryIPRecords', JSON.stringify(ipRecords));
+        }
+        
+        function saveHistory() {
+            localStorage.setItem('lotteryHistoryEnterprise', JSON.stringify(history));
+        }
+        
+        // 獎品管理函數（復用原有代碼）
+        function savePrizes() {
+            const items = document.querySelectorAll('#prizesAdmin .prize-item');
+            prizes = [];
+            let totalProb = 0;
+            
+            items.forEach(item => {
+                const name = item.querySelector('input[type="text"]').value.trim();
+                const probability = parseFloat(item.querySelector('input[type="number"]').value) || 0;
+                const color = item.querySelector('.color-picker').value;
+                
+                if (name) {
+                    prizes.push({ name, probability, color });
+                    totalProb += probability;
+                }
             });
             
-            document.getElementById(tab).classList.add('active');
-            event.target.classList.add('active');
+            if (Math.abs(totalProb - 100) > 0.1) {
+                alert(`警告：機率總和為 ${totalProb.toFixed(1)}%，建議調整為 100%`);
+            }
+            
+            localStorage.setItem('lotteryPrizes', JSON.stringify(prizes));
+            drawWheel();
+            updatePrizesList();
+            alert('設定已儲存！');
         }
         
-        // 更新統計資訊
-        function updateStatistics() {
-            document.getElementById('totalSpins').textContent = totalSpins;
-            document.getElementById('todayWinners').textContent = todayWinners;
-            localStorage.setItem('totalSpins', totalSpins);
-            localStorage.setItem('todayWinners', todayWinners);
+        function renderAdminPrizes() {
+            const container = document.getElementById('prizesAdmin');
+            container.innerHTML = '';
+            
+            prizes.forEach((prize, index) => {
+                const div = document.createElement('div');
+                div.className = 'prize-item';
+                div.style.cssText = `
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    margin-bottom: 15px;
+                    padding: 15px;
+                    background: #f8f9fa;
+                    border-radius: 10px;
+                    border: 2px solid transparent;
+                    transition: all 0.3s;
+                `;
+                div.innerHTML = `
+                    <input type="text" value="${prize.name}" placeholder="獎品名稱" style="flex: 1; padding: 8px 12px; border: 1px solid #ddd; border-radius: 5px;">
+                    <input type="number" value="${prize.probability}" min="0" max="100" step="0.1" placeholder="機率%" style="width: 80px; padding: 8px 12px; border: 1px solid #ddd; border-radius: 5px;">
+                    <input type="color" class="color-picker" value="${prize.color}" style="width: 50px; height: 40px; border: none; border-radius: 5px;">
+                    <button onclick="deletePrize(${index})" style="background: #ff4757; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer;">刪除</button>
+                `;
+                container.appendChild(div);
+            });
         }
         
-        // 更新獎品清單顯示
+        function addPrize() {
+            prizes.push({ name: '新獎品', probability: 0, color: '#' + Math.floor(Math.random()*16777215).toString(16) });
+            renderAdminPrizes();
+        }
+        
+        function deletePrize(index) {
+            if (confirm('確定要刪除這個獎品嗎？')) {
+                prizes.splice(index, 1);
+                renderAdminPrizes();
+            }
+        }
+        
         function updatePrizesList() {
             const container = document.getElementById('prizesList');
             container.innerHTML = '';
@@ -787,25 +1214,7 @@
             });
         }
         
-        // 儲存中獎記錄
-        function saveHistory(prize) {
-            const record = {
-                prize: prize.name,
-                time: new Date().toLocaleString('zh-TW'),
-                timestamp: Date.now()
-            };
-            history.unshift(record);
-            
-            // 只保留最近100筆記錄
-            if (history.length > 100) {
-                history = history.slice(0, 100);
-            }
-            
-            localStorage.setItem('lotteryHistory', JSON.stringify(history));
-            renderHistory();
-        }
-        
-        // 渲染中獎記錄
+        // 記錄管理
         function renderHistory() {
             const container = document.getElementById('historyList');
             
@@ -815,32 +1224,37 @@
             }
             
             container.innerHTML = history.map(record => `
-                <div class="history-item">
-                    <span>${record.prize}</span>
-                    <span style="color: #666; font-size: 12px;">${record.time}</span>
+                <div style="padding: 12px; margin: 8px 0; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #4ecdc4;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <strong>${record.prize}</strong><br>
+                            <small>代碼: ${record.code} | IP: ${record.ip}</small>
+                        </div>
+                        <div style="text-align: right; color: #666; font-size: 12px;">
+                            ${record.time}
+                        </div>
+                    </div>
                 </div>
             `).join('');
         }
         
-        // 清空中獎記錄
         function clearHistory() {
             if (confirm('確定要清空所有中獎記錄嗎？')) {
                 history = [];
-                localStorage.setItem('lotteryHistory', JSON.stringify(history));
+                saveHistory();
                 renderHistory();
                 alert('記錄已清空！');
             }
         }
         
-        // 匯出中獎記錄
         function exportHistory() {
             if (history.length === 0) {
                 alert('沒有記錄可以匯出！');
                 return;
             }
             
-            const csvContent = '獎品,中獎時間\n' + 
-                history.map(record => `"${record.prize}","${record.time}"`).join('\n');
+            const csvContent = '代碼,獎品,IP地址,中獎時間\n' + 
+                history.map(record => `"${record.code}","${record.prize}","${record.ip}","${record.time}"`).join('\n');
             
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
@@ -849,8 +1263,28 @@
             link.click();
         }
         
+        // 切換標籤頁
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.getElementById(tab).classList.add('active');
+            event.target.classList.add('active');
+        }
+        
         // 響應式處理
         window.addEventListener('resize', drawWheel);
+        
+        // 代碼輸入框回車事件
+        document.getElementById('codeInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                verifyCode();
+            }
+        });
     </script>
 </body>
 </html>

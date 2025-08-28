@@ -83,7 +83,6 @@
             display: block;
         }
         
-        /* 代碼驗證區域 */
         .code-verification {
             background: rgba(255,255,255,0.9);
             border-radius: 15px;
@@ -141,6 +140,7 @@
             border-radius: 10px;
             font-weight: bold;
             text-align: center;
+            display: none;
         }
         
         .status-success {
@@ -167,11 +167,16 @@
             margin-top: 10px;
         }
         
-        /* 遊戲區域 */
         .game-area {
             display: flex;
             gap: 30px;
             align-items: flex-start;
+        }
+        
+        @media (max-width: 768px) {
+            .game-area {
+                flex-direction: column;
+            }
         }
         
         .wheel-container {
@@ -192,6 +197,39 @@
             border: 8px solid #fff;
             box-shadow: 0 0 30px rgba(0,0,0,0.3);
             transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+            position: relative;
+            overflow: hidden;
+            background: conic-gradient(
+                #ff4757 0deg 51.4deg,
+                #ff6348 51.4deg 102.8deg,
+                #ffa502 102.8deg 154.2deg,
+                #ff7675 154.2deg 205.6deg,
+                #fdcb6e 205.6deg 257deg,
+                #6c5ce7 257deg 308.4deg,
+                #a0a0a0 308.4deg 360deg
+            );
+        }
+        
+        .segment {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            transform-origin: right bottom;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+            padding: 5px;
+        }
+        
+        .segment-text {
+            transform-origin: center;
+            white-space: nowrap;
+            font-size: 10px;
+            text-align: center;
         }
         
         .pointer {
@@ -241,7 +279,6 @@
             color: #333;
         }
         
-        /* 後台管理樣式 */
         .admin-section {
             background: rgba(255,255,255,0.9);
             border-radius: 15px;
@@ -313,7 +350,6 @@
             font-size: 12px;
         }
         
-        /* IP 限制資訊 */
         .ip-management {
             margin-top: 30px;
         }
@@ -333,7 +369,6 @@
             font-size: 14px;
         }
         
-        /* 彩帶動畫 */
         .confetti {
             position: fixed;
             top: 0;
@@ -384,6 +419,118 @@
             max-width: 400px;
             animation: modalPop 0.5s ease-out;
         }
-  <script src="content_script.js"></script>
-  </body>
-  </html>
+        
+        @keyframes modalPop {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎰 企業級抽獎系統</h1>
+            <p style="color: rgba(255,255,255,0.8);">輸入代碼驗證後開始抽獎</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn">🎮 抽獎遊戲</button>
+            <button class="tab-btn">🎯 中獎記錄</button>
+            <button class="tab-btn">⚙️ 後台管理</button>
+        </div>
+
+        <!-- 抽獎遊戲頁面 -->
+        <div class="tab-content">
+            <div class="code-verification">
+                <h3>🔐 請輸入抽獎代碼</h3>
+                <div class="code-input-group">
+                    <input type="text" id="codeInput" placeholder="輸入8位數代碼" maxlength="8">
+                    <button class="verify-btn" id="verifyCode">驗證代碼</button>
+                </div>
+                <div id="verificationStatus" class="status-message"></div>
+                <div id="currentIP" class="ip-info">正在獲取IP地址...</div>
+            </div>
+
+            <div class="game-area">
+                <div class="wheel-container">
+                    <h3 style="color: white; margin-bottom: 20px;">🎯 幸運大轉盤</h3>
+                    <div class="wheel-wrapper">
+                        <div class="pointer"></div>
+                        <div id="wheel"></div>
+                    </div>
+                    <button class="spin-btn" id="spinBtn" disabled>開始抽獎</button>
+                    <p style="color: rgba(255,255,255,0.8); margin-top: 15px;">
+                        請先驗證代碼再開始抽獎
+                    </p>
+                </div>
+
+                <div class="info-panel">
+                    <div id="drawingStats">
+                        <h3>🏆 抽獎結果</h3>
+                        <div style="color: green; margin: 10px 0;">
+                            點擊開始抽獎開始遊戲
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <div><strong>📊 當前獎品清單</strong></div>
+                            <div style="margin: 5px 0;">🥇 頭獎 - iPhone 15 (1%)</div>
+                            <div style="margin: 5px 0;">🥈 二獎 - iPad (2%)</div>
+                            <div style="margin: 5px 0;">🥉 三獎 - AirPods (5%)</div>
+                            <div style="margin: 5px 0;">🎁 四獎 - 購物金1000元 (10%)</div>
+                            <div style="margin: 5px 0;">🎁 五獎 - 購物金500元 (15%)</div>
+                            <div style="margin: 5px 0;">🎁 六獎 - 購物金200元 (20%)</div>
+                            <div style="margin: 5px 0;">😊 銘謝惠顧 (47%)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 中獎記錄頁面 -->
+        <div class="tab-content">
+            <div class="admin-section">
+                <h3>🎯 中獎記錄查詢</h3>
+                <p>目前使用 localStorage 儲存，重新整理頁面後記錄會保留</p>
+                <div id="winnerHistory" style="margin-top: 20px;">
+                    <div style="color: #666;">尚無中獎記錄</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 後台管理頁面 -->
+        <div class="tab-content">
+            <div class="admin-section">
+                <div class="code-management">
+                    <h3>🔑 抽獎代碼管理</h3>
+                    
+                    <div class="code-generator">
+                        <input type="text" id="customCode" placeholder="自訂代碼 (可選)" maxlength="8">
+                        <button class="generate-btn" id="generateCode">生成代碼</button>
+                    </div>
+                    
+                    <div class="code-generator">
+                        <input type="number" id="bulkCount" placeholder="批量數量" value="10" min="1" max="100">
+                        <button class="bulk-generate-btn" id="bulkGenerate">批量生成</button>
+                    </div>
+                    
+                    <h4>現有代碼清單：</h4>
+                    <div id="codeList" class="code-list">
+                        <div style="color: #666; text-align: center; padding: 20px;">
+                            尚無代碼，請先生成代碼
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ip-management">
+                    <h3>📊 IP 使用記錄</h3>
+                    <p>每個IP每日限制抽獎3次</p>
+                    <div id="ipList" class="ip-list">
+                        <div class="ip-item">載入中...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="content_script.js"></script>
+</body>
+</html>
